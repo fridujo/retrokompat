@@ -2,8 +2,6 @@ package com.github.fridujo.retrokompat;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
 import java.nio.file.Path;
 import java.util.Set;
 
@@ -17,8 +15,8 @@ class JarObjectTests {
     private final Path jarPath = JarMaker.compileAndPackage(PathUtils.forClassPath("jar_files/two_classes"));
 
     @Test
-    void listClassNames_returns_qualified_names() {
-        Set<String> classNames = new JarObject(jarPath).listClassNames();
+    void listTypeNames_returns_qualified_names() {
+        Set<String> classNames = new JarObject(jarPath).listTypeNames();
 
         assertThat(classNames)
             .containsExactlyInAnyOrder(
@@ -30,6 +28,6 @@ class JarObjectTests {
     void extractSignatures_returns_public_signatures() {
         Set<Signature> signatures = new JarObject(jarPath).extractSignatures();
 
-        assertThat(signatures.stream().map(s -> s.executable)).hasSize(2);
+        assertThat(signatures).hasSize(2);
     }
 }
