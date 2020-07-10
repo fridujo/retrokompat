@@ -4,6 +4,7 @@ import static java.util.Collections.emptySet;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -43,7 +44,7 @@ public class JarObject {
 
     public Set<String> listTypeNames() {
         Set<String> classNames = new LinkedHashSet<>();
-        try (ZipInputStream zin = new ZipInputStream(jarPath.toUri().toURL().openStream())) {
+        try (ZipInputStream zin = new ZipInputStream(Urls.fromPath(jarPath).openStream())) {
             for (; ; ) {
                 ZipEntry entry = zin.getNextEntry();
                 if (entry == null) {

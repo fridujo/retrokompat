@@ -17,3 +17,5 @@ buildNumber.properties
 .idea/
 *.iml
 
+# Maven verifier log
+log.txt
