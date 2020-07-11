@@ -65,7 +65,7 @@ public class CompatibilityChecker {
 
     private Set<CompatibilityError> checkExecutableCompatibility(JarObject v1Jar, JarObject v2Jar, MissingTypes missingTypes) {
         Set<Signature> v1Signatures = v1Jar.extractSignatures().stream()
-            .filter(s -> !missingTypes.contains(s.executable.getDeclaringClass()))
+            .filter(s -> !missingTypes.contains(s.originalDeclaringClass))
             .collect(Collectors.toCollection(LinkedHashSet::new));
         Set<Signature> v2Signatures = v2Jar.extractSignatures();
 

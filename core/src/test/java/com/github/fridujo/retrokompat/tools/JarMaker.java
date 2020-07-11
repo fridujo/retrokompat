@@ -44,8 +44,10 @@ public class JarMaker {
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
         Iterable<? extends JavaFileObject> javaFileObjects = fileManager.getJavaFileObjectsFromPaths(javaFilePaths);
         List<String> options = List.of("-d", outputPath.toString());
-        compiler.getTask(null, fileManager, null, options, null, javaFileObjects)
-            .call();
+        if (!compiler.getTask(null, fileManager, d -> System.out.println(d), options, null, javaFileObjects)
+            .call()) {
+            throw new IllegalStateException("Compilation error");
+        }
         return outputPath;
     }
 

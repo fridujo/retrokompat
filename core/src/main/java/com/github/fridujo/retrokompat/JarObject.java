@@ -90,7 +90,7 @@ public class JarObject {
         Set<Signature> signatures = new LinkedHashSet<>();
         Arrays.stream(loadedClass.getMethods())
             .filter(m -> m.getDeclaringClass().getClassLoader() != null)
-            .map(Signature::new)
+            .map(executable -> new Signature(loadedClass, executable))
             .forEach(signatures::add);
 
         Arrays.stream(loadedClass.getConstructors())
