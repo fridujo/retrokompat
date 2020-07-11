@@ -4,19 +4,27 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import com.github.fridujo.retrokompat.tools.MethodFormatter;
+
 public class Signature {
 
+    public final Class<?> originalDeclaringClass;
     public final Executable executable;
     private final boolean isMethod;
 
     public Signature(Executable executable) {
+        this(executable.getDeclaringClass(), executable);
+    }
+
+    public Signature(Class<?> originalDeclaringClass, Executable executable) {
+        this.originalDeclaringClass = originalDeclaringClass;
         this.executable = executable;
         this.isMethod = executable instanceof Method;
     }
 
     @Override
     public String toString() {
-        return executable.toString();
+        return isMethod ? new MethodFormatter(originalDeclaringClass, (Method) executable).toString() : executable.toString();
     }
 
     /**
