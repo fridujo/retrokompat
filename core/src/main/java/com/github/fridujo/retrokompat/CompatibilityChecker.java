@@ -1,5 +1,7 @@
 package com.github.fridujo.retrokompat;
 
+import static java.util.Collections.emptySet;
+
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -11,8 +13,12 @@ import java.util.stream.Collectors;
 public class CompatibilityChecker {
 
     public Set<CompatibilityError> check(Path v1JarPath, Path v2JarPath) {
-        JarObject v1Jar = new JarObject(v1JarPath);
-        JarObject v2Jar = new JarObject(v2JarPath);
+        return check(v1JarPath, emptySet(), v2JarPath, emptySet());
+    }
+
+    public Set<CompatibilityError> check(Path v1JarPath, Set<Path> v1DependencyPaths, Path v2JarPath, Set<Path> v2DependencyPaths) {
+        JarObject v1Jar = new JarObject(v1JarPath, v1DependencyPaths);
+        JarObject v2Jar = new JarObject(v2JarPath, v2DependencyPaths);
 
         MissingTypes missingTypes = new MissingTypes(v1Jar, v2Jar);
 

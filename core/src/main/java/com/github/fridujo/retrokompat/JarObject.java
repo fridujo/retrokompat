@@ -1,9 +1,10 @@
 package com.github.fridujo.retrokompat;
 
+import static java.util.Collections.emptySet;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -15,6 +16,8 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import com.github.fridujo.retrokompat.tools.Urls;
+
 public class JarObject {
 
     public static final String CLASS_EXTENSION = ".class";
@@ -22,12 +25,20 @@ public class JarObject {
     private final URLClassLoader childClassLoader;
 
     public JarObject(Path jarPath) {
+        this(jarPath, emptySet());
+    }
+
+    public JarObject(Path jarPath, Set<Path> dependencyPaths) {
         this.jarPath = jarPath;
-        try {
-            this.childClassLoader = new URLClassLoader(new URL[]{jarPath.toUri().toURL()}, JarObject.class.getClassLoader());
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+
+        URL[] urls = Stream.concat(
+            Stream.of(jarPath),
+            dependencyPaths.stream()
+        )
+            .map(p -> Urls.fromPath(p))
+            .toArray(URL[]::new);
+
+        this.childClassLoader = new URLClassLoader(urls, JarObject.class.getClassLoader());
     }
 
     public Set<String> listTypeNames() {
@@ -39,7 +50,8 @@ public class JarObject {
                     break;
                 }
                 String name = entry.getName();
-                if (name.endsWith(CLASS_EXTENSION)) {
+                if (name.endsWith(CLASS_EXTENSION)
+                    && !name.equals("module-info.class")) {
                     classNames.add(name.substring(0, name.length() - CLASS_EXTENSION.length()).replace('/', '.'));
                 }
             }
@@ -50,11 +62,8 @@ public class JarObject {
     }
 
     public Set<Signature> extractSignatures() {
-        ClassLoader appClassLoader = Signature.class.getClassLoader();
-        ClassLoader systemClassLoader = appClassLoader.getParent();
-
         return streamPublicTypes()
-            .flatMap(c -> extractSignatures(c, systemClassLoader).stream())
+            .flatMap(c -> extractSignatures(c).stream())
             .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
@@ -70,11 +79,14 @@ public class JarObject {
                     return childClassLoader.loadClass(className);
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
+                } catch (NoClassDefFoundError e) {
+                    throw new RuntimeException("Cannot load class [" + className + "] from JAR, maybe a classpath element is missing\n" +
+                        "Consider using JarObject(Path jarPath, Set<Path> dependencyPaths) instead of JarObject(Path jarPath)", e);
                 }
             });
     }
 
-    private Set<Signature> extractSignatures(Class<?> loadedClass, ClassLoader systemClassLoader) {
+    private Set<Signature> extractSignatures(Class<?> loadedClass) {
         Set<Signature> signatures = new LinkedHashSet<>();
         Arrays.stream(loadedClass.getMethods())
             .filter(m -> m.getDeclaringClass().getClassLoader() != null)
