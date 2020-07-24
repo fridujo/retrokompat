@@ -39,7 +39,8 @@ public class JarObject {
             .map(p -> Urls.fromPath(p))
             .toArray(URL[]::new);
 
-        this.childClassLoader = new URLClassLoader(urls, JarObject.class.getClassLoader());
+        ClassLoader platformClassLoader = JarObject.class.getClassLoader().getParent();
+        this.childClassLoader = new URLClassLoader(urls, platformClassLoader);
     }
 
     public Set<String> listTypeNames() {
@@ -81,7 +82,7 @@ public class JarObject {
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (NoClassDefFoundError e) {
-                    throw new RuntimeException("Cannot load class [" + className + "] from JAR, maybe a classpath element is missing\n" +
+                    throw new RuntimeException("Cannot load class [" + className + "] from JAR " + jarPath.getFileName() +  ", maybe a classpath element is missing\n" +
                         "Consider using JarObject(Path jarPath, Set<Path> dependencyPaths) instead of JarObject(Path jarPath)", e);
                 }
             });

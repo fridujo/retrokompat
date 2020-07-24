@@ -45,7 +45,7 @@ public class Signature {
             return false;
         }
         for (int paramIndex = 0; paramIndex < executable.getParameterCount(); paramIndex++) {
-            if (getParameterType(paramIndex).isLessSpecific(v2.getParameterType(paramIndex))) {
+            if (!getParameterType(paramIndex).isSame(v2.getParameterType(paramIndex))) {
                 return false;
             }
         }

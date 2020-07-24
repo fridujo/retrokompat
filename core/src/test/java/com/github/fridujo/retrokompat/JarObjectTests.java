@@ -1,5 +1,6 @@
 package com.github.fridujo.retrokompat;
 
+import static com.github.fridujo.retrokompat.tools.PathUtils.getDependencyPath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -47,23 +48,15 @@ class JarObjectTests {
         void jarObject_throws_if_class_cannot_be_loaded() {
             assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> new JarObject(junitJupiterApiPath).streamPublicTypes().collect(Collectors.toList()))
-                .withMessageStartingWith("Cannot load class [")
-                .withMessageEndingWith("] from JAR, maybe a classpath element is missing\n" +
-                    "Consider using JarObject(Path jarPath, Set<Path> dependencyPaths) instead of JarObject(Path jarPath)");
+                .withMessageMatching(
+                    "Cannot load class \\[(.+)] from JAR junit-jupiter-api-(.+)\\.jar, maybe a classpath element is missing\n" +
+                        "Consider using JarObject\\(Path jarPath, Set<Path> dependencyPaths\\) instead of JarObject\\(Path jarPath\\)");
         }
 
         @Test
         void jarObject_works_properly_with_according_classpath() {
             assertThat(new JarObject(opentest4jPath).streamPublicTypes().map(c -> c.getSimpleName()))
                 .contains("AssertionFailedError");
-        }
-
-        private Path getDependencyPath(String artifactId) {
-            return Arrays.stream(System.getProperty("java.class.path").split(File.pathSeparator))
-                .filter(p -> p.contains(artifactId))
-                .map(Paths::get)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No matching path in classpath"));
         }
     }
 }
