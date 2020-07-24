@@ -46,4 +46,8 @@ public class JavaType {
         Set<String> upperTypes = listTypesInHierarchy(other.type);
         return upperTypes.contains(type.getName());
     }
+
+    public boolean isSame(JavaType other) {
+        return type.getName().equals(other.type.getName());
+    }
 }
