@@ -8,7 +8,27 @@ Backward compatibility for Java binaries.
 ## Motivation
 When publishing a library, a sdk or any binary that is used externally, one may want to check for backward compatibility.
 
-That is, if some code uses a library, it will not break when upgrading it to a newer MINOR version (see [semantic versionning](https://semver.org/)).
-
 This tool will help achieving that verification in the form of a Maven plugin.
 
+## Usage
+
+Add the plugin in the **pom.xml** file:
+```xml
+<plugins>
+    ...
+    <plugin>
+        <groupId>com.github.fridujo</groupId>
+        <artifactId>retrokompat-maven-plugin</artifactId>
+        <version>${retrokompat-maven-plugin.version}</version>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>check</goal>
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
+</plugins>
+```
+
+By default the goal `check` is bound to **pre-integration-test** phase (see [build lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)).
