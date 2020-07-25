@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.com/fridujo/retrokompat.svg?branch=master)](https://travis-ci.com/fridujo/retrokompat)
 [![Coverage Status](https://codecov.io/gh/fridujo/retrokompat/branch/master/graph/badge.svg)](https://codecov.io/gh/fridujo/retrokompat/)
 [![License](https://img.shields.io/github/license/fridujo/retrokompat.svg)](https://opensource.org/licenses/Apache-2.0)
+[![SourceSpy Dashboard](https://sourcespy.com/shield.svg)](https://sourcespy.com/github/fridujoretrokompat/)
 
 Backward compatibility for Java binaries.
 
@@ -31,4 +32,4 @@ Add the plugin in the **pom.xml** file:
 </plugins>
 ```
 
-By default the goal `check` is bound to **pre-integration-test** phase (see [build lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)).
+By default the goal `check` is bound to **pre-integration-test** phase (see [build lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#lifecycle-reference)).

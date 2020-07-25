@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashSet;
@@ -14,6 +15,8 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -21,6 +24,43 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 public class JarMaker {
+
+    private static final Pattern TYPE_LINE_PATTERN = Pattern.compile("(?:enum|interface|class)\\s+(?<typeName>[^\\s]+).+");
+
+    public static Path compileAndPackage(String sourceContent, String jarName) {
+        Path targetDirectory = Paths.get("").resolve("target");
+        Path containingFolder = targetDirectory.resolve("generated-classes").resolve(jarName);
+        if (Files.exists(containingFolder)) {
+            FileUtils.deleteFolder(containingFolder);
+        }
+        try {
+            Files.createDirectories(containingFolder);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+        String className = extractTypeName(sourceContent);
+        Path classFile = containingFolder.resolve(className + ".java");
+
+        try {
+            Files.createFile(classFile);
+            Files.write(classFile, sourceContent.getBytes());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+        Path outputPath = compile(containingFolder);
+
+        return createJarFile(outputPath);
+    }
+
+    private static String extractTypeName(String sourceContent) {
+        Matcher matcher = TYPE_LINE_PATTERN.matcher(sourceContent);
+        if (!matcher.find()) {
+            throw new IllegalArgumentException("Could not extract type name");
+        }
+        return matcher.group("typeName");
+    }
 
     public static Path compileAndPackage(Path sourceFolderPath) {
         Path outputPath = compile(sourceFolderPath);

@@ -4,7 +4,7 @@ cache:
     directories:
         - "$HOME/.m2"
 
-script: mvn verify
+script: mvn verify -P execute-documentation
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
