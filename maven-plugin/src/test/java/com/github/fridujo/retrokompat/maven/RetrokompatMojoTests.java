@@ -102,7 +102,6 @@ class RetrokompatMojoTests {
 
         when(versionScanner.getLastVersion(any(), any(), any())).thenReturn(Optional.of("4.3.2.1"));
         when(jarResolver.resolveVersion(any(), any(), any(), any())).thenReturn(new JarWithDependencies(null, null));
-        when(dependenciesResolver.getDependenciesOfProject(any(), any())).thenReturn(emptySet());
 
         RuntimeException prankException = new RuntimeException("Bazinga! " + UUID.randomUUID().toString());
         when(compatibilityChecker.check(any(), any(), any(), any())).thenThrow(prankException);

@@ -80,8 +80,8 @@ class DependenciesResolverTests {
             .withCause(projectBuildingException);
     }
 
-    @TestFactory
-    Stream<DynamicTest> getDependencies_throws_if_artifactResolver_throws() throws ProjectBuildingException, ArtifactResolverException {
+    @Test
+    void getDependenciesOfArtifact_throws_if_artifactResolver_throws() throws ProjectBuildingException, ArtifactResolverException {
         DefaultProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest();
         Artifact artifact = buildArtifact("test", "test", "0.0.1-SNAPSHOT");
         List<Dependency> aetherDependencies = List.of(
@@ -90,25 +90,10 @@ class DependenciesResolverTests {
         when(projectBuilder.build(artifact, buildingRequest).getDependencyResolutionResult().getDependencies()).thenReturn(aetherDependencies);
         ArtifactResolverException artifactResolverException = new ArtifactResolverException(UUID.randomUUID().toString(), null);
         when(artifactResolver.resolveArtifact(any(), any(ArtifactCoordinate.class))).thenThrow(artifactResolverException);
-        MavenProject mavenProject = mock(MavenProject.class);
-        when(mavenProject.getArtifact()).thenReturn(buildArtifact("test", "test", "2"));
-        when(mavenProject.getDependencies()).thenReturn(List.of(
-            buildMavenModelDependency("test", "test", "2", "provided")
-        ));
 
-        return Stream.of(
-            dynamicTest("getDependenciesOfArtifact", () ->
-                assertThatExceptionOfType(MojoExecutionException.class)
-                    .isThrownBy(() -> dependenciesResolver.getDependenciesOfArtifact(buildingRequest, artifact))
-                    .withMessage("Unable to list dependencies of test:test:pom:0.0.1-SNAPSHOT")
-                    .withCause(artifactResolverException)
-            ),
-            dynamicTest("getDependenciesOfProject", () ->
-                assertThatExceptionOfType(MojoExecutionException.class)
-                    .isThrownBy(() -> dependenciesResolver.getDependenciesOfProject(buildingRequest, mavenProject))
-                    .withMessage("Unable to list dependencies of test:test:pom:2")
-                    .withCause(artifactResolverException)
-            )
-        );
+        assertThatExceptionOfType(MojoExecutionException.class)
+            .isThrownBy(() -> dependenciesResolver.getDependenciesOfArtifact(buildingRequest, artifact))
+            .withMessage("Unable to list dependencies of test:test:pom:0.0.1-SNAPSHOT")
+            .withCause(artifactResolverException);
     }
 }

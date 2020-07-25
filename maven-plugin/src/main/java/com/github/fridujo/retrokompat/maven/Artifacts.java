@@ -13,14 +13,6 @@ interface Artifacts {
         );
     }
 
-    static ArtifactCoordinate buildCoordinate(org.apache.maven.model.Dependency d) {
-        return buildCoordinate(
-            d.getGroupId(),
-            d.getArtifactId(),
-            d.getVersion()
-        );
-    }
-
     static ArtifactCoordinate buildCoordinate(String groupId, String artifactId, String version) {
         DefaultArtifactCoordinate artifactCoordinate = new DefaultArtifactCoordinate();
         artifactCoordinate.setGroupId(groupId);

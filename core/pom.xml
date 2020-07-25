@@ -34,6 +34,7 @@
                             <sourceDirs>
                                 <sourceDir>${project.basedir}/src/test/java</sourceDir>
                             </sourceDirs>
+                            <skip>${skipTests}</skip>
                         </configuration>
                     </execution>
                 </executions>
