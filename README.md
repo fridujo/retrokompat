@@ -31,4 +31,4 @@ Add the plugin in the **pom.xml** file:
 </plugins>
 ```
 
-By default the goal `check` is bound to **pre-integration-test** phase (see [build lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)).
+By default the goal `check` is bound to **pre-integration-test** phase (see [build lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#lifecycle-reference)).

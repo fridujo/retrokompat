@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>retrokompat</artifactId>
         <groupId>com.github.fridujo</groupId>
+        <artifactId>retrokompat</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -15,6 +15,11 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fridujo</groupId>
+            <artifactId>markdown-junit-engine</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -59,6 +64,18 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <properties>
+                        <configurationParameters>
+                            markdown-junit-engine.markdown-files-root-path=${maven.multiModuleProjectDirectory}/COMPATIBILITY.md
+                            markdown-junit-engine.markdown-visitor-factory-class=com.github.fridujo.retrokompat.executabledoc.ExecutableDocVisitorFactory
+                        </configurationParameters>
+                    </properties>
+                </configuration>
             </plugin>
         </plugins>
     </build>
