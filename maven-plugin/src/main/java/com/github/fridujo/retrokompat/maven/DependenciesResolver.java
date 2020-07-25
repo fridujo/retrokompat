@@ -5,20 +5,16 @@ import static org.apache.maven.artifact.Artifact.SCOPE_PROVIDED;
 import static org.apache.maven.artifact.Artifact.SCOPE_RUNTIME;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingResult;
-import org.apache.maven.shared.transfer.artifact.ArtifactCoordinate;
 import org.apache.maven.shared.transfer.artifact.resolve.ArtifactResolver;
 import org.codehaus.plexus.component.annotations.Component;
 
@@ -51,40 +47,17 @@ class DependenciesResolver extends SimpleArtifactResolver {
         return v1BuildingResult;
     }
 
-    Set<Path> getDependenciesOfProject(ProjectBuildingRequest buildingRequest, MavenProject project) throws MojoExecutionException {
-        try {
-            return mapDependenciesToPaths(
-                project.getDependencies(),
-                d -> d.getScope(),
-                Artifacts::buildCoordinate,
-                buildingRequest);
-        } catch (UncheckedArtifactResolverException e) {
-            throw new MojoExecutionException("Unable to list dependencies of " + project.getArtifact(), e.cause);
-        }
-    }
-
     private Set<Path> collectDependenciesPaths(ProjectBuildingRequest buildingRequest, ProjectBuildingResult buildingResult, Artifact artifact) throws MojoExecutionException {
         try {
-            return mapDependenciesToPaths(
-                buildingResult.getDependencyResolutionResult().getDependencies(),
-                d -> d.getScope(),
-                Artifacts::buildCoordinate,
-                buildingRequest);
+            return buildingResult.getDependencyResolutionResult().getDependencies()
+                .stream()
+                .filter(d -> AUTHORIZED_SCOPES.contains(d.getScope()))
+                .map(Artifacts::buildCoordinate)
+                .map(ac -> resolveArtifact(ac, buildingRequest, UncheckedArtifactResolverException::new))
+                .map(a -> a.getFile().toPath())
+                .collect(Collectors.toSet());
         } catch (UncheckedArtifactResolverException e) {
             throw new MojoExecutionException("Unable to list dependencies of " + artifact, e.cause);
         }
-    }
-
-    private <DEPENDENCY> Set<Path> mapDependenciesToPaths(List<DEPENDENCY> dependencies,
-                                                          Function<DEPENDENCY, String> scopeExtractor,
-                                                          Function<DEPENDENCY, ArtifactCoordinate> artifactCoordinateMapper,
-                                                          ProjectBuildingRequest buildingRequest) throws UncheckedArtifactResolverException {
-        return dependencies
-            .stream()
-            .filter(d -> AUTHORIZED_SCOPES.contains(scopeExtractor.apply(d)))
-            .map(d -> artifactCoordinateMapper.apply(d))
-            .map(ac -> resolveArtifact(ac, buildingRequest, UncheckedArtifactResolverException::new))
-            .map(a -> a.getFile().toPath())
-            .collect(Collectors.toSet());
     }
 }

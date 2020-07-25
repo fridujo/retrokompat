@@ -82,7 +82,7 @@ public class RetrokompatMojo extends AbstractMojo {
                 lastVersion,
                 mavenSession.getProjectBuildingRequest());
 
-            Set<Path> currentProjectDeps = dependenciesResolver.getDependenciesOfProject(mavenSession.getProjectBuildingRequest(), project);
+            Set<Path> currentProjectDeps = dependenciesResolver.getDependenciesOfArtifact(mavenSession.getProjectBuildingRequest(), project.getArtifact());
             Set<CompatibilityError> errors;
             try {
                 errors = compatibilityChecker.check(
