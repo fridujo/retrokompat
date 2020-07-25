@@ -1,10 +1,13 @@
 package com.github.fridujo.retrokompat.tools;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import com.github.fridujo.markdown.junit.engine.support.Sources;
+
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashSet;
@@ -15,12 +18,39 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 
 public class JarMaker {
+
+    public static Path compileAndPackage(String jarName, Iterable<String> sourceContents) {
+        Path targetDirectory = Paths.get("").resolve("target");
+        Path containingFolder = targetDirectory.resolve("generated-classes").resolve(jarName);
+        if (Files.exists(containingFolder)) {
+            FileUtils.deleteFolder(containingFolder);
+        }
+        try {
+            Files.createDirectories(containingFolder);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+        sourceContents.forEach(s -> writeSourceToFile(s, containingFolder));
+
+        Path outputPath = compile(containingFolder);
+
+        return createJarFile(outputPath);
+    }
+
+    private static void writeSourceToFile(String sourceContent, Path containingFolder) {
+        String className = Sources.extractName(sourceContent).orElseThrow(() -> new IllegalArgumentException("Could not extract type name"));
+        Path classFile = containingFolder.resolve(className + ".java");
+
+        try {
+            Files.createFile(classFile);
+            Files.write(classFile, sourceContent.getBytes());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
 
     public static Path compileAndPackage(Path sourceFolderPath) {
         Path outputPath = compile(sourceFolderPath);
