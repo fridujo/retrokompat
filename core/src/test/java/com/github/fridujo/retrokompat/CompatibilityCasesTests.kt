@@ -24,8 +24,8 @@ class CompatibilityCasesTests {
 
     @Test
     fun `more specific return type is compatible`() {
-        val v1 = 
-        """
+        val v1 =
+            """
             public CharSequence doStuff() {
                 return null;
             }

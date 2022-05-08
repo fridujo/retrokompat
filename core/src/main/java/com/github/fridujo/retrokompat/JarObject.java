@@ -1,10 +1,9 @@
 package com.github.fridujo.retrokompat;
 
-import static java.util.Collections.emptySet;
+import com.github.fridujo.retrokompat.tools.Urls;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -17,7 +16,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import com.github.fridujo.retrokompat.tools.Urls;
+import static java.util.Collections.emptySet;
 
 public class JarObject {
 
@@ -33,9 +32,9 @@ public class JarObject {
         this.jarPath = jarPath;
 
         URL[] urls = Stream.concat(
-            Stream.of(jarPath),
-            dependencyPaths.stream()
-        )
+                Stream.of(jarPath),
+                dependencyPaths.stream()
+            )
             .map(p -> Urls.fromPath(p))
             .toArray(URL[]::new);
 
@@ -82,7 +81,7 @@ public class JarObject {
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (NoClassDefFoundError e) {
-                    throw new RuntimeException("Cannot load class [" + className + "] from JAR " + jarPath.getFileName() +  ", maybe a classpath element is missing\n" +
+                    throw new RuntimeException("Cannot load class [" + className + "] from JAR " + jarPath.getFileName() + ", maybe a classpath element is missing\n" +
                         "Consider using JarObject(Path jarPath, Set<Path> dependencyPaths) instead of JarObject(Path jarPath)", e);
                 }
             });

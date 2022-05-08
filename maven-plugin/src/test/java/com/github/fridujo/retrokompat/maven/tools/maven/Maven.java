@@ -1,6 +1,10 @@
 package com.github.fridujo.retrokompat.maven.tools.maven;
 
-import static java.util.Optional.empty;
+import com.github.fridujo.retrokompat.maven.tools.Processes;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,12 +16,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
-import com.github.fridujo.retrokompat.maven.tools.Processes;
+import static java.util.Optional.empty;
 
 class Maven {
 

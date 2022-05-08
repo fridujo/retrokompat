@@ -1,9 +1,9 @@
 package com.github.fridujo.retrokompat.maven.tools.maven;
 
+import org.apache.maven.plugin.logging.SystemStreamLog;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.maven.plugin.logging.SystemStreamLog;
 
 public class RecordedLog extends SystemStreamLog {
 

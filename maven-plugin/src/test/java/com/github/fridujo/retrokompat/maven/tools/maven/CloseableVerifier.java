@@ -1,5 +1,11 @@
 package com.github.fridujo.retrokompat.maven.tools.maven;
 
+import com.github.fridujo.retrokompat.maven.tools.LoggerFactory;
+import org.apache.maven.it.VerificationException;
+import org.apache.maven.it.Verifier;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.opentest4j.AssertionFailedError;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
@@ -8,13 +14,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.apache.maven.it.VerificationException;
-import org.apache.maven.it.Verifier;
-import org.apache.maven.shared.utils.io.FileUtils;
-import org.opentest4j.AssertionFailedError;
-
-import com.github.fridujo.retrokompat.maven.tools.LoggerFactory;
 
 public class CloseableVerifier implements AutoCloseable {
 
@@ -57,11 +56,15 @@ public class CloseableVerifier implements AutoCloseable {
             verifier.executeGoals(goalList);
         } catch (VerificationException e) {
             if (e.getMessage().startsWith("Exit code was non-zero")) {
-                LOGGER.info("Maven build failed: " + e.getMessage().replace("\n", "\n" + " ".repeat(8) + "> "));
+                LOGGER.info("Maven build failed: " + e.getMessage().replace("\n", "\n" + repeat(" ", 8) + "> "));
             } else {
                 throw new IllegalStateException("Maven failed to execute " + goalList + cliOptions + "\n" + e.getMessage().replace("\n", "\n>>>\t"), e);
             }
         }
+    }
+
+    private String repeat(String token, int times) {
+        return new String(new char[times]).replace("\0", token);
     }
 
     public void verifyErrorFreeLog() {

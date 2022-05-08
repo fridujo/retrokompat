@@ -1,12 +1,12 @@
 package com.github.fridujo.retrokompat.maven;
 
-import java.util.function.Function;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.transfer.artifact.ArtifactCoordinate;
 import org.apache.maven.shared.transfer.artifact.resolve.ArtifactResolver;
 import org.apache.maven.shared.transfer.artifact.resolve.ArtifactResolverException;
+
+import java.util.function.Function;
 
 class SimpleArtifactResolver {
 

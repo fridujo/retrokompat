@@ -1,12 +1,12 @@
 package com.github.fridujo.retrokompat;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 import java.net.BindException;
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ExceptionsTests {
 

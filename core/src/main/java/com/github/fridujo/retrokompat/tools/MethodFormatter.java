@@ -31,7 +31,7 @@ public class MethodFormatter {
             for (Class<?> parameterType : method.getParameterTypes()) {
                 sj.add(parameterType.getTypeName());
             }
-            sb.append(sj.toString());
+            sb.append(sj);
             sb.append(')');
 
             if (method.getExceptionTypes().length > 0) {
@@ -39,7 +39,7 @@ public class MethodFormatter {
                 for (Class<?> exceptionType : method.getExceptionTypes()) {
                     joiner.add(exceptionType.getTypeName());
                 }
-                sb.append(joiner.toString());
+                sb.append(joiner);
             }
             return sb.toString();
         } catch (Exception e) {

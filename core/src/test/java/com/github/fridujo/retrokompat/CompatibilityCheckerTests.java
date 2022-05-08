@@ -1,17 +1,16 @@
 package com.github.fridujo.retrokompat;
 
-import static com.github.fridujo.retrokompat.tools.PathUtils.getDependencyPath;
-import static java.util.Collections.emptySet;
-import static org.assertj.core.api.Assertions.assertThat;
+import com.github.fridujo.retrokompat.tools.JarMaker;
+import com.github.fridujo.retrokompat.tools.PathUtils;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Set;
 
-import org.junit.jupiter.api.Test;
-
-import com.github.fridujo.retrokompat.tools.JarMaker;
-import com.github.fridujo.retrokompat.tools.PathUtils;
+import static com.github.fridujo.retrokompat.tools.PathUtils.getDependencyPath;
+import static java.util.Collections.emptySet;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class CompatibilityCheckerTests {
 
@@ -22,7 +21,7 @@ class CompatibilityCheckerTests {
         Path jarV1 = JarMaker.compileAndPackage(PathUtils.forClassPath("jar_files/v1"));
         Path jarV2 = JarMaker.compileAndPackage(PathUtils.forClassPath("jar_files/v2"));
 
-        Set<CompatibilityError> errors = new CompatibilityChecker().check(jarV1, emptySet(), jarV2, Set.of(opentest4jPath));
+        Set<CompatibilityError> errors = new CompatibilityChecker().check(jarV1, emptySet(), jarV2, Collections.singleton(opentest4jPath));
 
         assertThat(errors).isEmpty();
     }
@@ -32,7 +31,7 @@ class CompatibilityCheckerTests {
         Path jarV2 = JarMaker.compileAndPackage(PathUtils.forClassPath("jar_files/v2"));
         Path jarV3 = JarMaker.compileAndPackage(PathUtils.forClassPath("jar_files/v3"));
 
-        Set<CompatibilityError> errors = new CompatibilityChecker().check(jarV2, Set.of(opentest4jPath), jarV3, emptySet());
+        Set<CompatibilityError> errors = new CompatibilityChecker().check(jarV2, Collections.singleton(opentest4jPath), jarV3, emptySet());
 
         assertThat(errors.stream().map(Object::toString)).containsExactlyInAnyOrder(
             "new version removes type com.github.Dog",

@@ -1,13 +1,13 @@
 package com.github.fridujo.retrokompat.tools;
 
-import static java.nio.file.Files.exists;
-import static java.nio.file.Files.walkFileTree;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
+
+import static java.nio.file.Files.exists;
+import static java.nio.file.Files.walkFileTree;
 
 public class FileUtils {
 
@@ -19,6 +19,10 @@ public class FileUtils {
                 throw new UncheckedIOException(e);
             }
         }
+    }
+
+    public static void createFolder(Path path) {
+        path.toFile().mkdirs();
     }
 
     public static Stream<Path> streamFilesIn(Path folder) {

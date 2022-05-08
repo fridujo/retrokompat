@@ -10,6 +10,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,15 +66,17 @@ public class JarMaker {
             .resolve(sourceFolderPath.getFileName())
             .toAbsolutePath();
         FileUtils.deleteFolder(outputPath);
+        FileUtils.createFolder(outputPath);
 
-        Set<Path> javaFilePaths = FileUtils.streamFilesIn(sourceFolderPath)
+        Set<File> javaFilePaths = FileUtils.streamFilesIn(sourceFolderPath)
             .filter(p -> p.toString().endsWith(".java"))
+            .map(Path::toFile)
             .collect(Collectors.toCollection(LinkedHashSet::new));
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-        Iterable<? extends JavaFileObject> javaFileObjects = fileManager.getJavaFileObjectsFromPaths(javaFilePaths);
-        List<String> options = List.of("-d", outputPath.toString());
+        Iterable<? extends JavaFileObject> javaFileObjects = fileManager.getJavaFileObjectsFromFiles(javaFilePaths);
+        List<String> options = Arrays.asList("-d", outputPath.toString());
         if (!compiler.getTask(null, fileManager, d -> System.out.println(d), options, null, javaFileObjects)
             .call()) {
             throw new IllegalStateException("Compilation error");

@@ -16,13 +16,11 @@ class ExecutableDocVisitor extends AbstractVisitor implements MarkdownVisitor {
 
     private final Deque<PathElement> nodePath = new ArrayDeque<>();
     private final Collection<TestNode.Builder> testNodes = new ArrayList<>();
-    private int codeBlockSequence = 0;
 
     private RunnableTestCase currentTestCase;
 
     @Override
     public void visit(Heading heading) {
-        codeBlockSequence = 0;
         currentTestCase = new RunnableTestCase();
         int level = heading.getLevel();
         String headingText = ((Text) heading.getFirstChild()).getLiteral();
@@ -70,7 +68,7 @@ class ExecutableDocVisitor extends AbstractVisitor implements MarkdownVisitor {
             if (parent == null) {
                 testNodes.add(runnableBuilder);
             } else {
-                ContainerNode.Builder.class.cast(parent.node).addChild(runnableBuilder);
+                ((ContainerNode.Builder) parent.node).addChild(runnableBuilder);
             }
             nodePath.push(new PathElement(leafContainer.level, runnableBuilder));
         }
@@ -78,13 +76,13 @@ class ExecutableDocVisitor extends AbstractVisitor implements MarkdownVisitor {
     }
 
     private void addNewContainer(int level, String headingText) {
-        var newContainer = new ContainerNode.Builder(headingText);
+        ContainerNode.Builder newContainer = new ContainerNode.Builder(headingText);
         PathElement parentNode = nodePath.peekFirst();
         if (parentNode == null) {
             testNodes.add(newContainer);
         } else {
             if (parentNode.node().type() == TestNode.Type.CONTAINER) {
-                ContainerNode.Builder.class.cast(parentNode.node()).addChild(newContainer);
+                ((ContainerNode.Builder) parentNode.node()).addChild(newContainer);
             } else {
                 throw new IllegalStateException("Can not append a node to the non-container " + parentNode);
             }
@@ -102,6 +100,17 @@ class ExecutableDocVisitor extends AbstractVisitor implements MarkdownVisitor {
         return testNodes.stream().map(TestNode.Builder::build).collect(Collectors.toList());
     }
 
-    private record PathElement(int level, TestNode.Builder node) {
+    private static class PathElement {
+        private final int level;
+        private final TestNode.Builder node;
+
+        private PathElement(int level, TestNode.Builder node) {
+            this.level = level;
+            this.node = node;
+        }
+
+        public TestNode.Builder node() {
+            return node;
+        }
     }
 }

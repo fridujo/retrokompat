@@ -1,18 +1,5 @@
 package com.github.fridujo.retrokompat.maven.tools;
 
-import static java.nio.file.FileVisitResult.CONTINUE;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.URI;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.logging.Logger;
-
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -20,6 +7,15 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.URI;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.logging.Logger;
+
+import static java.nio.file.FileVisitResult.CONTINUE;
 
 public class GitExtension implements ParameterResolver {
 
@@ -71,7 +67,7 @@ public class GitExtension implements ParameterResolver {
     private void deleteDirectory(Path path) {
         if (Files.exists(path)) {
             try {
-                Files.walkFileTree(path, new SimpleFileVisitor<>() {
+                Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
 
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {

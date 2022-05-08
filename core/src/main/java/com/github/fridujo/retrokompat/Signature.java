@@ -1,10 +1,10 @@
 package com.github.fridujo.retrokompat;
 
+import com.github.fridujo.retrokompat.tools.MethodFormatter;
+
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-
-import com.github.fridujo.retrokompat.tools.MethodFormatter;
 
 public class Signature {
 
@@ -50,11 +50,7 @@ public class Signature {
             }
         }
 
-        if (!getCheckedExceptionTypes().areTheSame(v2.getCheckedExceptionTypes())) {
-            return false;
-        }
-
-        return true;
+        return getCheckedExceptionTypes().areTheSame(v2.getCheckedExceptionTypes());
     }
 
     private JavaType getReturnType() {

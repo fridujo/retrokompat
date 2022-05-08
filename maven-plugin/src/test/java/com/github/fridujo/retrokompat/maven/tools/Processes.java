@@ -1,10 +1,10 @@
 package com.github.fridujo.retrokompat.maven.tools;
 
+import org.junit.jupiter.api.condition.OS;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-
-import org.junit.jupiter.api.condition.OS;
 
 public class Processes {
 

@@ -1,22 +1,8 @@
 package com.github.fridujo.retrokompat.maven;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.UUID;
-
+import com.github.fridujo.retrokompat.CompatibilityChecker;
+import com.github.fridujo.retrokompat.maven.tools.ReflectionUtils;
+import com.github.fridujo.retrokompat.maven.tools.maven.RecordedLog;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -25,9 +11,17 @@ import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.github.fridujo.retrokompat.CompatibilityChecker;
-import com.github.fridujo.retrokompat.maven.tools.ReflectionUtils;
-import com.github.fridujo.retrokompat.maven.tools.maven.RecordedLog;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Optional;
+import java.util.UUID;
+
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class RetrokompatMojoTests {
 
@@ -103,7 +97,7 @@ class RetrokompatMojoTests {
         when(versionScanner.getLastVersion(any(), any(), any())).thenReturn(Optional.of("4.3.2.1"));
         when(jarResolver.resolveVersion(any(), any(), any(), any())).thenReturn(new JarWithDependencies(null, null));
 
-        RuntimeException prankException = new RuntimeException("Bazinga! " + UUID.randomUUID().toString());
+        RuntimeException prankException = new RuntimeException("Bazinga! " + UUID.randomUUID());
         when(compatibilityChecker.check(any(), any(), any(), any())).thenThrow(prankException);
 
         assertThatExceptionOfType(MojoExecutionException.class)
