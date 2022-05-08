@@ -1,5 +1,5 @@
 # RetroKompat
-[![Build Status](https://travis-ci.com/fridujo/retrokompat.svg?branch=master)](https://travis-ci.com/fridujo/retrokompat)
+![build](https://github.com/fridujo/retrokompat/actions/workflows/build.yml/badge.svg)
 [![Coverage Status](https://codecov.io/gh/fridujo/retrokompat/branch/master/graph/badge.svg)](https://codecov.io/gh/fridujo/retrokompat/)
 [![License](https://img.shields.io/github/license/fridujo/retrokompat.svg)](https://opensource.org/licenses/Apache-2.0)
 
