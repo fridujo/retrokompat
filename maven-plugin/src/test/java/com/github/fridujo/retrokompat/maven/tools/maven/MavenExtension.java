@@ -1,12 +1,12 @@
 package com.github.fridujo.retrokompat.maven.tools.maven;
 
-import java.nio.file.Paths;
-
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+
+import java.nio.file.Paths;
 
 public class MavenExtension implements ParameterResolver {
     @Override

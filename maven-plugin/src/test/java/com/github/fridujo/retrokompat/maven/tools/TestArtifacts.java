@@ -1,12 +1,12 @@
 package com.github.fridujo.retrokompat.maven.tools;
 
-import java.util.HashMap;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.DefaultArtifactFactory;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.artifact.handler.manager.DefaultArtifactHandlerManager;
 import org.eclipse.aether.artifact.DefaultArtifact;
+
+import java.util.HashMap;
 
 public class TestArtifacts {
 

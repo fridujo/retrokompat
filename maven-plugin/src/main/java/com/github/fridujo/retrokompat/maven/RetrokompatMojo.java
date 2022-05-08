@@ -1,15 +1,7 @@
 package com.github.fridujo.retrokompat.maven;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.inject.Inject;
-
+import com.github.fridujo.retrokompat.CompatibilityChecker;
+import com.github.fridujo.retrokompat.CompatibilityError;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Build;
@@ -22,8 +14,15 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
-import com.github.fridujo.retrokompat.CompatibilityChecker;
-import com.github.fridujo.retrokompat.CompatibilityError;
+import javax.inject.Inject;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Mojo(
     name = "check",
@@ -63,12 +62,12 @@ public class RetrokompatMojo extends AbstractMojo {
             project.getArtifact(),
             localRepository,
             remoteRepositories);
-        if (potentialLastVersion.isEmpty()) {
+        if (!potentialLastVersion.isPresent()) {
             getLog().warn("No previous versions found from:" +
                 Stream.concat(
-                    Stream.of(localRepository),
-                    remoteRepositories.stream()
-                ).map(Object::toString)
+                        Stream.of(localRepository),
+                        remoteRepositories.stream()
+                    ).map(Object::toString)
                     .collect(Collectors.joining("\n\t", "\n\t", ""))
             );
         } else {

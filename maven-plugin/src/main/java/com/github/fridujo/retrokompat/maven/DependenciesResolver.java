@@ -1,14 +1,5 @@
 package com.github.fridujo.retrokompat.maven;
 
-import static org.apache.maven.artifact.Artifact.SCOPE_COMPILE;
-import static org.apache.maven.artifact.Artifact.SCOPE_PROVIDED;
-import static org.apache.maven.artifact.Artifact.SCOPE_RUNTIME;
-
-import java.nio.file.Path;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.inject.Inject;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.ProjectBuilder;
@@ -18,10 +9,20 @@ import org.apache.maven.project.ProjectBuildingResult;
 import org.apache.maven.shared.transfer.artifact.resolve.ArtifactResolver;
 import org.codehaus.plexus.component.annotations.Component;
 
+import javax.inject.Inject;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.apache.maven.artifact.Artifact.*;
+
 @Component(role = DependenciesResolver.class)
 class DependenciesResolver extends SimpleArtifactResolver {
 
-    static final Set<String> AUTHORIZED_SCOPES = Set.of(SCOPE_COMPILE, SCOPE_RUNTIME, SCOPE_PROVIDED);
+    static final Set<String> AUTHORIZED_SCOPES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(SCOPE_COMPILE, SCOPE_RUNTIME, SCOPE_PROVIDED)));
 
     private final ProjectBuilder projectBuilder;
 

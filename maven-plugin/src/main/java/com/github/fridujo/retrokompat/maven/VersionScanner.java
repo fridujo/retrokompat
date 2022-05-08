@@ -1,10 +1,5 @@
 package com.github.fridujo.retrokompat.maven;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -15,6 +10,11 @@ import org.apache.maven.repository.legacy.metadata.ArtifactMetadataRetrievalExce
 import org.apache.maven.repository.legacy.metadata.ArtifactMetadataSource;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component(role = VersionScanner.class)
 class VersionScanner {

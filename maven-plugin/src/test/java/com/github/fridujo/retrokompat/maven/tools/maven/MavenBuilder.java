@@ -1,9 +1,9 @@
 package com.github.fridujo.retrokompat.maven.tools.maven;
 
-import java.util.List;
-
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
+
+import java.util.Collections;
 
 public class MavenBuilder {
 
@@ -12,13 +12,13 @@ public class MavenBuilder {
         plugin.setGroupId(groupId);
         plugin.setArtifactId(artifactId);
         plugin.setVersion(version);
-        plugin.setExecutions(List.of(execution));
+        plugin.setExecutions(Collections.singletonList(execution));
         return plugin;
     }
 
     public static PluginExecution buildPluginExecutionForGoal(String goal) {
         PluginExecution execution = new PluginExecution();
-        execution.setGoals(List.of(goal));
+        execution.setGoals(Collections.singletonList(goal));
         return execution;
     }
 }

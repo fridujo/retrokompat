@@ -3,7 +3,7 @@ package com.github.fridujo.retrokompat.maven.tools.maven;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Collections;
 
 public class MavenRunner {
 
@@ -11,7 +11,7 @@ public class MavenRunner {
         Path currentDirectory = Paths.get("").toAbsolutePath();
         Path topLevelMavenDirectory = findTopLevelMavenDirectory(currentDirectory);
         try (CloseableVerifier verifier = new CloseableVerifier(topLevelMavenDirectory)) {
-            verifier.execute(List.of("-DskipTests"), "install");
+            verifier.execute(Collections.singletonList("-DskipTests"), "install");
         }
     }
 

@@ -1,21 +1,17 @@
 package com.github.fridujo.retrokompat;
 
-import static com.github.fridujo.retrokompat.tools.PathUtils.getDependencyPath;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.github.fridujo.retrokompat.tools.JarMaker;
+import com.github.fridujo.retrokompat.tools.PathUtils;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.github.fridujo.retrokompat.tools.JarMaker;
-import com.github.fridujo.retrokompat.tools.PathUtils;
+import java.nio.file.Path;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.github.fridujo.retrokompat.tools.PathUtils.getDependencyPath;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class JarObjectTests {
 

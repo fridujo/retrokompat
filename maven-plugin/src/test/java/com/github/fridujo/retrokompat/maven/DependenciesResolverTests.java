@@ -1,27 +1,8 @@
 package com.github.fridujo.retrokompat.maven;
 
-import static com.github.fridujo.retrokompat.maven.tools.TestArtifacts.buildAetherDependency;
-import static com.github.fridujo.retrokompat.maven.tools.TestArtifacts.buildArtifact;
-import static com.github.fridujo.retrokompat.maven.tools.TestArtifacts.buildMavenModelDependency;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Stream;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.DefaultProjectBuildingRequest;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.shared.transfer.artifact.ArtifactCoordinate;
@@ -30,9 +11,21 @@ import org.apache.maven.shared.transfer.artifact.resolve.ArtifactResolverExcepti
 import org.apache.maven.shared.transfer.artifact.resolve.ArtifactResult;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
-import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import static com.github.fridujo.retrokompat.maven.tools.TestArtifacts.buildAetherDependency;
+import static com.github.fridujo.retrokompat.maven.tools.TestArtifacts.buildArtifact;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class DependenciesResolverTests {
 
@@ -45,7 +38,7 @@ class DependenciesResolverTests {
     void getDependenciesOfArtifact_build_it_to_retrieve_transitive_dependencies() throws MojoExecutionException, ProjectBuildingException, ArtifactResolverException {
         DefaultProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest();
         Artifact artifact = buildArtifact("test", "test", "0.0.1-SNAPSHOT");
-        List<Dependency> aetherDependencies = List.of(
+        List<Dependency> aetherDependencies = Arrays.asList(
             new Dependency(new DefaultArtifact("test:test:1"), "compile"),
             new Dependency(new DefaultArtifact("test:test:2"), "runtime"),
             new Dependency(new DefaultArtifact("test:test:3"), "provided"),
@@ -84,7 +77,7 @@ class DependenciesResolverTests {
     void getDependenciesOfArtifact_throws_if_artifactResolver_throws() throws ProjectBuildingException, ArtifactResolverException {
         DefaultProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest();
         Artifact artifact = buildArtifact("test", "test", "0.0.1-SNAPSHOT");
-        List<Dependency> aetherDependencies = List.of(
+        List<Dependency> aetherDependencies = Arrays.asList(
             buildAetherDependency("test:test:1", "compile")
         );
         when(projectBuilder.build(artifact, buildingRequest).getDependencyResolutionResult().getDependencies()).thenReturn(aetherDependencies);

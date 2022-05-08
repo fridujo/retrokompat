@@ -13,12 +13,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RunnableTestCase implements Runnable {
 
+    final List<String> errorMessages = new ArrayList<>();
     private final List<String> v1Sources = new ArrayList<>();
     private final List<String> v2Sources = new ArrayList<>();
     private final List<String> unqualifiedSources = new ArrayList<>();
     Boolean v2CodeFragment = null;
     Boolean compatible = null;
-    final List<String> errorMessages = new ArrayList<>();
 
     @Override
     public void run() {

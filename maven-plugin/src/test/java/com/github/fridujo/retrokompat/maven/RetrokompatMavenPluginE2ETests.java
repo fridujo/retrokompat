@@ -1,22 +1,21 @@
 package com.github.fridujo.retrokompat.maven;
 
-import static com.github.fridujo.retrokompat.maven.tools.maven.MavenBuilder.buildPlugin;
-import static com.github.fridujo.retrokompat.maven.tools.maven.MavenBuilder.buildPluginExecutionForGoal;
-
-import java.nio.file.Path;
-import java.util.List;
-
-import org.apache.maven.project.MavenProject;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import com.github.fridujo.retrokompat.maven.tools.GitClone;
 import com.github.fridujo.retrokompat.maven.tools.GitExtension;
 import com.github.fridujo.retrokompat.maven.tools.maven.CloseableVerifier;
 import com.github.fridujo.retrokompat.maven.tools.maven.MavenExtension;
 import com.github.fridujo.retrokompat.maven.tools.maven.MavenModifier;
 import com.github.fridujo.retrokompat.maven.tools.maven.MavenRunner;
+import org.apache.maven.project.MavenProject;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.nio.file.Path;
+import java.util.Arrays;
+
+import static com.github.fridujo.retrokompat.maven.tools.maven.MavenBuilder.buildPlugin;
+import static com.github.fridujo.retrokompat.maven.tools.maven.MavenBuilder.buildPluginExecutionForGoal;
 
 @ExtendWith({GitExtension.class, MavenExtension.class})
 class RetrokompatMavenPluginE2ETests {
@@ -47,7 +46,7 @@ class RetrokompatMavenPluginE2ETests {
 
         try (CloseableVerifier verifier = new CloseableVerifier(projectPath)) {
             verifier.execute(
-                List.of(
+                Arrays.asList(
                     "-DskipTests",
                     "-Dmaven.javadoc.skip=true",
                     "-Drat.skip",
@@ -74,7 +73,7 @@ class RetrokompatMavenPluginE2ETests {
 
         try (CloseableVerifier verifier = new CloseableVerifier(projectPath)) {
             verifier.execute(
-                List.of(
+                Arrays.asList(
                     "-DskipTests",
                     "-Dmaven.source.skip",
                     "-Dmaven.javadoc.skip=true"

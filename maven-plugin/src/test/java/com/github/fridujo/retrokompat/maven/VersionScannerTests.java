@@ -1,21 +1,6 @@
 package com.github.fridujo.retrokompat.maven;
 
-import static com.github.fridujo.retrokompat.maven.tools.TestArtifacts.buildArtifact;
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import com.github.fridujo.retrokompat.maven.tools.ReflectionUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
@@ -29,13 +14,25 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 
-import com.github.fridujo.retrokompat.maven.tools.ReflectionUtils;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static com.github.fridujo.retrokompat.maven.tools.TestArtifacts.buildArtifact;
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 class VersionScannerTests {
 
     private final ArtifactMetadataSource artifactMetadataSource = mock(ArtifactMetadataSource.class);
     private final ArtifactRepository localArtifactRepository = mock(ArtifactRepository.class);
-    private final List<ArtifactRepository> remoteArtifactRepositories = List.of(mock(ArtifactRepository.class));
+    private final List<ArtifactRepository> remoteArtifactRepositories = Collections.singletonList(mock(ArtifactRepository.class));
 
     private final VersionScanner versionScanner = new VersionScanner();
 
