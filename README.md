@@ -10,6 +10,13 @@ When publishing a library, a sdk or any binary that is used externally, one may 
 
 This tool will help achieving that verification in the form of a Maven plugin.
 
+## Compatibility rules
+
+Compatibility rules can be found here: [Compatibility rules](doc/COMPATIBILITY.md).
+
+These rules are verified with the help of the [markdown-junit-engine](https://github.com/fridujo/markdown-junit-engine) which allows
+to verify them through the use of a [custom visitor](core/src/test/java/com/github/fridujo/retrokompat/executabledoc/ExecutableDocVisitor.java).
+
 ## Usage
 
 Add the plugin in the **pom.xml** file:

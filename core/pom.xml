@@ -22,6 +22,11 @@
             <artifactId>markdown-junit-engine</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -71,7 +76,7 @@
                 <configuration>
                     <properties>
                         <configurationParameters>
-                            markdown-junit-engine.markdown-files-root-path=${maven.multiModuleProjectDirectory}/COMPATIBILITY.md
+                            markdown-junit-engine.markdown-files-root-path=${maven.multiModuleProjectDirectory}/doc
                             markdown-junit-engine.markdown-visitor-factory-class=com.github.fridujo.retrokompat.executabledoc.ExecutableDocVisitorFactory
                         </configurationParameters>
                     </properties>

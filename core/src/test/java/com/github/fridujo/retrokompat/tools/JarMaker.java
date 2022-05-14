@@ -1,6 +1,8 @@
 package com.github.fridujo.retrokompat.tools;
 
 import com.github.fridujo.markdown.junit.engine.support.Sources;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -10,10 +12,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -21,6 +20,8 @@ import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 
 public class JarMaker {
+
+    private static final Logger logger = LoggerFactory.getLogger(JarMaker.class);
 
     public static Path compileAndPackage(String jarName, Iterable<String> sourceContents) {
         Path targetDirectory = Paths.get("").resolve("target");
@@ -72,6 +73,9 @@ public class JarMaker {
             .filter(p -> p.toString().endsWith(".java"))
             .map(Path::toFile)
             .collect(Collectors.toCollection(LinkedHashSet::new));
+        if(javaFilePaths.isEmpty()) {
+            return outputPath;
+        }
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
@@ -89,10 +93,12 @@ public class JarMaker {
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         Path jarPath = outputPath.getParent().resolve(outputPath.getFileName() + ".jar");
         try (JarOutputStream jos = new JarOutputStream(new FileOutputStream(jarPath.toFile()), manifest)) {
+            List<String> classNames = new ArrayList<>();
             FileUtils.streamFilesIn(outputPath)
                 .filter(p -> p.toString().endsWith(".class"))
                 .map(Path::toFile)
                 .forEach(f -> {
+                    classNames.add(f.toPath().getFileName().toString());
                     String entryName = f.getPath().substring(outputPath.toFile().getPath().length() + 1).replace("\\", "/");
                     JarEntry entry = new JarEntry(entryName);
                     entry.setTime(f.lastModified());
@@ -115,6 +121,7 @@ public class JarMaker {
                         throw new UncheckedIOException(e);
                     }
                 });
+            logger.info("Jar {} created containing {} classes ({})", jarPath.getFileName(), classNames.size(), classNames.stream().collect(Collectors.joining(", ")));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
