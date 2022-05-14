@@ -3,6 +3,8 @@ package com.github.fridujo.retrokompat.executabledoc;
 import com.github.fridujo.retrokompat.CompatibilityChecker;
 import com.github.fridujo.retrokompat.CompatibilityError;
 import com.github.fridujo.retrokompat.tools.JarMaker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RunnableTestCase implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(RunnableTestCase.class);
 
     final List<String> errorMessages = new ArrayList<>();
     private final List<String> v1Sources = new ArrayList<>();
@@ -29,9 +33,11 @@ class RunnableTestCase implements Runnable {
 
         if (compatible) {
             assertThat(errors).isEmpty();
+            logger.info("Compatibility asserted, no compatibility error");
         } else {
             assertThat(errors.stream().map(Object::toString))
                 .containsExactlyInAnyOrderElementsOf(errorMessages);
+            logger.info("Incompatibility asserted, exactly one error with the expected message was found");
         }
     }
 
