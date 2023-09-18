@@ -29,7 +29,7 @@
         <junit.version>5.6.2</junit.version>
         <assertj.version>3.16.1</assertj.version>
         <maven-verifier.version>1.7.2</maven-verifier.version>
-        <jgit.version>5.8.0.202006091008-r</jgit.version>
+        <jgit.version>6.6.1.202309021850-r</jgit.version>
 
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <maven-plugin-plugin.version>3.6.4</maven-plugin-plugin.version>
